@@ -1,8 +1,8 @@
-import { Table, Anchor } from "@mantine/core";
+import { Table, Anchor, Button } from "@mantine/core";
 import { formatDistanceToNow } from "date-fns";
 
 import AppLoader from "components/AppLoader";
-import { useGithubTrends } from "./api";
+import { useGithubTrends, useFavoriteRepos } from "./api";
 
 const TrendingReposTable = () => {
   const { data, isFetching } = useGithubTrends();
@@ -18,6 +18,7 @@ const TrendingReposTable = () => {
           <th>Open issues</th>
           <th>Last update</th>
           <th>License</th>
+          <th />
         </tr>
       </thead>
 
@@ -34,10 +35,26 @@ const TrendingReposTable = () => {
             <td>{repo.open_issues_count}</td>
             <td>{formatDistanceToNow(new Date(repo.pushed_at))}</td>
             <td>{repo.license?.name}</td>
+            <td>
+              <FavoriteRepoCell id={repo.id} />
+            </td>
           </tr>
         ))}
       </tbody>
     </Table>
+  );
+};
+
+const FavoriteRepoCell = ({ id }) => {
+  const { data } = useFavoriteRepos();
+
+  const isFavoriteRepo = data?.includes(id.toString());
+  const favoritedIcon = isFavoriteRepo ? "♥" : "♡";
+
+  return (
+    <Button compact variant="outline">
+      {favoritedIcon}
+    </Button>
   );
 };
 

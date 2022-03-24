@@ -19,3 +19,17 @@ export const useGithubTrends = () => {
     return data;
   });
 };
+
+export const useFavoriteRepos = () => {
+  return useQuery("favoriteRepos", () => {
+    const lsData = localStorage.getItem("favoriteRepos");
+    let favoriteRepos = [];
+
+    try {
+      favoriteRepos = JSON.parse(lsData);
+      return favoriteRepos;
+    } catch (error) {
+      return [];
+    }
+  });
+};
