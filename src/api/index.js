@@ -1,1 +1,21 @@
-// https://api.github.com/search/repositories?q=created:%3E2017-01-10&sort=stars&order=desc
+import { useQuery } from "react-query";
+import { subDays } from "date-fns";
+
+export const useGithubTrends = () => {
+  return useQuery("githubTrends", async () => {
+    const wtd = subDays(new Date(), 7).toISOString();
+
+    const url = "https://api.github.com/search/repositories";
+
+    const params = new URLSearchParams({
+      q: `created:>${wtd}`,
+      sort: "stars",
+      order: "desc",
+    });
+
+    const res = await fetch(`${url}?${params}`);
+    const data = await res.json();
+
+    return data;
+  });
+};

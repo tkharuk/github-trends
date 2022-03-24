@@ -4,7 +4,7 @@ import TrendingReposTable from "./TrendingReposTable";
 
 function App() {
   return (
-    <Container>
+    <Container fluid>
       <TrendingReposTable />
     </Container>
   );
