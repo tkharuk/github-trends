@@ -1,13 +1,16 @@
-import { Table, Anchor, Button } from "@mantine/core";
+import { Table, Anchor, Button, LoadingOverlay } from "@mantine/core";
 import { formatDistanceToNow } from "date-fns";
 
-import AppLoader from "components/AppLoader";
-import { useGithubTrends, useFavoriteRepos } from "./api";
+import {
+  useGithubTrends,
+  useFavoriteRepos,
+  useToggleRepoToFavorites,
+} from "./api";
 
-const TrendingReposTable = () => {
-  const { data, isFetching } = useGithubTrends();
+const TrendingReposTable = ({ filters }) => {
+  const { data, isFetching } = useGithubTrends({ filters });
 
-  if (isFetching) return <AppLoader />;
+  if (isFetching) return <LoadingOverlay visible />;
 
   return (
     <Table striped>
@@ -47,12 +50,17 @@ const TrendingReposTable = () => {
 
 const FavoriteRepoCell = ({ id }) => {
   const { data } = useFavoriteRepos();
+  const { mutate: toggleFavoriteRepo } = useToggleRepoToFavorites();
 
-  const isFavoriteRepo = data?.includes(id.toString());
+  const isFavoriteRepo = data?.includes(id);
   const favoritedIcon = isFavoriteRepo ? "♥" : "♡";
 
+  const handleClick = () => {
+    toggleFavoriteRepo({ id });
+  };
+
   return (
-    <Button compact variant="outline">
+    <Button compact variant="outline" onClick={handleClick}>
       {favoritedIcon}
     </Button>
   );
