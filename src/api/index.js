@@ -22,7 +22,7 @@ export const useGithubTrends = ({ filters }) => {
 
     // if not for localstorage, would be a param in api request
     if (filters.onlyFavorite) {
-      const favorites = getFromLS(LS_FAVORITES_KEY);
+      const favorites = getFromLS(LS_FAVORITES_KEY) || [];
       const onlyFavoriteRepos = data?.items.filter((repo) => {
         return favorites.includes(repo.id);
       });
